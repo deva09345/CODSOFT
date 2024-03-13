@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        nav{
+            margin: 0;
+            display: flex;
+            justify-content: space-between;
+            background-color: #75578c;
+            
+            padding: 15px;
+            overflow: hidden;
+            align-items: center;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+          
+        }
+        .navbar-mainlogo{
+            padding-left: 35px;
+        }
+        .navbar-mainhead{
+            font-family: 'Roboto', sans-serif;
+            padding-left: 155px;
+            transition: transform 0.3s ease;
+            color: #fff;
+            font-size: 22px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .navbar-mainhead:hover{
+            transform: scale(1.2);
+            /*color:chocolate;*/
+        }
+        .navbar-mainsocials{
+            padding: 15px;
+            padding-right: 50px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .navbar-n{
+            padding: 2px;
+            border-radius: 50%;
+            width:40px;
+            height:40px;
+            transition: transform 0.3s ease;
+        }
+        .navbar-n:hover{            
+            border-radius: 50%;
+            transform: scale(1.5);
+        }
+        form{
+            border: none;
+            border-radius: 25px;
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: 90px 1fr; 
+            grid-gap: 20px;
+            width: 32vw;
+            margin-top: 50px;
+            background: linear-gradient(rgba(226, 83, 200, 0.09),rgb(216, 47, 17));
+            height: 80vh;
+        }
+        .display{
+           
+            padding: 10px;
+            
+        }
+        #out{
+            border-radius: 9px;
+            margin-top: 15px;
+            font-size: 34px;
+            width: 99%;
+            height: 70px;
+            background-color: rgb(241, 230, 230);
+            text-align: right;
+            border: none;
+        }
+        .act{
+            margin: 10px;
+            display: grid;
+            grid-gap: 15px;
+            grid-template-columns: repeat(4,1fr);
+            grid-template-rows: auto-fill;
+            grid-template-areas: 
+            "eq eq emp mul"
+            "num7 num8 num9 sub"
+            "num4 num5 num6 sum"
+            "num1 num2 num3 cl"
+            "num0 dec div cl";
+        }
+        #num0{
+            grid-area: num0;
+        }
+        #dec{
+            grid-area: dec;
+        }
+        #sum{
+            grid-area: sum;
+        }
+        #equal{
+            grid-area: cl;
+        }
+        #clear{
+            grid-area: eq;
+        }
+        #num7{
+            grid-area: num7;
+        }
+        #num8{
+            grid-area: num8;
+        }
+        #num9{
+            grid-area: num9;
+        }
+        #sub{
+            grid-area: sub;
+        }
+        #mul{
+            grid-area: mul;
+        }
+        input{
+            font-size: 24px;
+        }
+        input[type="button"],input[type="reset"]{
+            border-radius: 10px;
+            font-weight: bold;
+            border: 2px solid gray;
+        }
+        #clear,#equal, #div,#sum,#sub,#mul{
+            background-color: rgb(190, 136, 240);
+        }
+        .cc{
+            display: flex;
+            justify-content: center;
+            background-color: pink;
+            padding-bottom: 15px;
+        }
+        input{
+            font-family: Courier New (monospace);
+            transition: transform 0.3s ease;
+        }
+        input:hover{
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="navbar-mainlogo">
+            <a href="">
+                <img class="navbar-n" src="data:image/png;base64,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" alt="logo">   
+            </a>
+        </div>
+        <div class="navbar-mainhead">
+            <h1><center>
+                CODSOFT INTERNSHIP
+            </center></h1>
+        </div>
+        <div class="navbar-mainsocials">              
+            <a href="www.linkedin.com/in/devaraj-k-13a19029">  
+                <img class="navbar-n" src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-square1-512.png" alt="linkedin">
+            </a>
+            <a href="https://www.instagram.com/devaraj_k?igsh=MWdkdDl4dG95ZzB3cg==">  
+                <img class="navbar-n" src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-instagram-new-square2-512.png" alt="ig">
+            </a>
+            <a href=" https://x.com/_devaraj_k?s=08">
+                <img class="navbar-n" src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-twitter-square2-512.png" alt="twitter">
+           </a>
+        </div>
+    </nav>
+    <center><h1><b> CALCULATOR</b></h1></center>
+    <div class="cc">
+    <form action="">
+        <div class="display">
+            <input type="text" name="text" id="out" readonly>
+        </div>
+        <div class="act">
+            <div id="emp"></div>
+            <input type="button" id="sum" onclick="add('+')" value="+">
+            <input type="button" id="num7" onclick="add(7)" value="7">
+            <input type="button" id="num8" onclick="add(8)" value="8">
+            <input type="button" id="num9" onclick="add(9)" value="9">
+            <input type="button" id="num4" onclick="add(4)" value="4">
+            <input type="button" id="num5" onclick="add(5)" value="5">
+            <input type="button" id="num6" onclick="add(6)" value="6">
+            <input type="button" id="num1" onclick="add(1)" value="1">
+            <input type="button" id="num2" onclick="add(2)" value="2">
+            <input type="button" id="num3" onclick="add(3)" value="3">
+            <input type="button" id="div" onclick="add('/')" value="/">
+            <input type="button" id="mul" onclick="add('*')" value="X">
+            <input type="button" id="sub" onclick="add('-')" value="-">
+            <input type="button" id="equal" onclick="cal()" value="=">
+            <input type="button" id="num0" onclick="add(0)" value="0">
+            <input type="button" id="dec" onclick="add('.')" value=".">
+            <input type="reset"  id="clear" value="C">
+        </div>
+    </form>
+    </div>
+    
+</body>
+<script>
+    function add(x){
+        document.getElementById("out").value += x; 
+    }
+    function cal(){
+        var output = document.getElementById("out").value;
+        var result = eval(output);
+        document.getElementById("out").value = result;
+        document.getElementById("out").value = result;
+    }
+</script>
+</html>
